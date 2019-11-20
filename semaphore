@@ -1,0 +1,63 @@
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+int Semaphore = 0; //counting semaphore
+
+void wait() {
+	cout << "\nIn the removing process...\n";
+	--Semaphore;
+}
+
+void signal() {
+	cout << "\nIn the adding process...\n";
+	++Semaphore;
+}
+
+bool full(int total) {
+	return Semaphore < total;
+}
+
+bool empty() {
+	return Semaphore == 0;
+}
+
+int main() {
+
+	cout << "Enter the total number of seats: ";
+	int total;
+	cin >> total;
+	bool loop = true;
+	while (loop) {
+		cout << "What would you like to do?" << endl << "1. Add Person" << endl << "2. Remove Person" << endl << "3. Exit Event\n";
+		int choice;
+		cin >> choice;
+		if (choice == 1) {
+			if (full(total)) {
+				signal();
+				cout << "\nAdded!\n";
+			}
+			else {
+				cout << "\nSeats are full!\n";
+				cout << "Exiting..." << endl;
+				loop = false;
+			}
+		}
+		else if (choice == 2) {
+			if (!empty()) {
+				wait();
+				cout << "\nPerson Removed!\n";
+			}
+			else {
+				cout << "You can't remove when you've not added!" << endl;
+				cout << "Exiting..." << endl;
+				loop = false;
+			}
+		}
+		else {
+			loop = false;
+		}
+	}
+
+}
